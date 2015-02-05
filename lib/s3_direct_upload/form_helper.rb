@@ -5,7 +5,7 @@ module S3DirectUpload
       content_tag(:div, uploader.form_options) do
         uploader.fields.map do |name, value|
           hidden_field_tag(name, value)
-        end.join.html_safe + capture(&block)
+        end.join.html_safe + capture(uploader.url, &block)
       end
     end
 
@@ -52,7 +52,7 @@ module S3DirectUpload
           :signature => signature,
           :success_action_status => "201",
           'X-Requested-With' => 'xhr'
-        }
+        }.merge(@options[:additional_fields] || {})
       end
 
       def key
